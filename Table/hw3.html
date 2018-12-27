@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>3. házi feladat</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.line-block{white-space: pre-line;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">3. házi feladat</h1>
+</header>
+<p>A feladat egy egyszerű adatbázis-alkalmazás készítése. Az adatbázis táblázatokat tárol.</p>
+<pre><code> col1  |  col2  |  col3
+-------+--------+-------
+ val11 |  val12 |  val13
+ val21 |  val22 |  val23</code></pre>
+<p>Minden táblázat áll valamennyi oszlopból és minden oszlophoz tartozik egy név (col1, col2, col3 a fenti példában). Az értékek minden esetben stringek és nem tartalmazhatnak 0 ASCII kódú karaktert (‘\0’). Az oszlopok nevei kizárólag angol alfanumerikus karaktereket tartalmaznak.</p>
+<h2 id="join">JOIN</h2>
+<p>A JOIN műveletet a következőképp értelmezzük: adott egy <span class="math inline"><em>A</em></span> tábla <span class="math inline"><em>A</em><sub>1</sub>, <em>A</em><sub>2</sub>...<em>A</em><sub><em>n</em></sub></span> oszlopokkal, egy <span class="math inline"><em>B</em></span> tábla <span class="math inline"><em>B</em><sub>1</sub>, <em>B</em><sub>2</sub>....<em>B</em><sub><em>m</em></sub></span> oszlopokkal és egy <span class="math inline"><em>A</em><sub><em>a</em></sub> = <em>B</em><sub><em>b</em></sub>, <em>A</em><sub><em>c</em></sub> = <em>B</em><sub><em>d</em></sub>...</span> alakú F feltétel. <em>A JOIN B ON F</em> kimenete egy olyan C tábla, aminek oszlopai <span class="math inline"><em>A</em><sub>1</sub>, <em>A</em><sub>2</sub>...<em>A</em><sub><em>n</em></sub>, <em>B</em><sub>1</sub>, <em>B</em><sub>2</sub>, ...<em>B</em><sub><em>m</em></sub></span> és sorai azok az <span class="math inline">(<em>a</em>, <em>b</em>)</span> párok, amelyekre teljesül, hogy <span class="math inline"><em>a</em> ∈ <em>A</em>, <em>b</em> ∈ <em>B</em></span> és <span class="math inline"><em>F</em></span> igaz <span class="math inline"><em>a</em>, <em>b</em></span> behelyettesítéssel. Példa:</p>
+<pre><code>  A1  |  A2  |  A3          B1  |  B2  |  B3
+------+------+------      ------+------+------
+ pata | kapa | papa        pata | totó | kapa
+ pata | pete | teve        pata | mohó | kapa
+ teve | tele | fele        tere | jojó | fere
+ tere | fere | fele        hohó | hihi | hehe
+
+F := A1=B1, A2=B3
+
+A JOIN B ON F
+
+  A1  |  A2  |  A3  |  B1  |  B2  |  B3
+------+------+------+------+------+------
+ pata | kapa | papa | pata | totó | kapa
+ pata | kapa | papa | pata | mohó | kapa
+ tere | fere | fele | tere | jojó | fere</code></pre>
+<p>A JOIN legegyszerűbb megvalósításában összehasonlítjuk <span class="math inline"><em>A</em></span> minden sorát <span class="math inline"><em>B</em></span> minden sorával, és a feltételnek megfelelő párokat megtartjuk. Ez a megoldás <span class="math inline"><em>O</em>(<em>n</em><sup>2</sup>)</span>-es, azaz lassú. Gyorsabban elvégezhetjük a JOIN-t a következőképpen:</p>
+<ol type="1">
+<li><p>Alakítsuk a feltételt a következő formára: <span class="math inline"><em>A</em><sub><em>a</em></sub> + <em>s</em> + <em>A</em><sub><em>c</em></sub> + <em>s</em> + ... = <em>B</em><sub><em>b</em></sub> + <em>s</em> + <em>B</em><sub><em>d</em></sub> + <em>s</em> + ...</span>, ahol <span class="math inline">+</span> a stringek összefűzését jelenti, <span class="math inline"><em>s</em></span> pedig egy semelyik értékben elő nem forduló szeparátor (esetünkben a “\0”);</p></li>
+<li><p>Képezzük az <span class="math inline"><em>A</em><sub><em>a</em></sub> + <em>s</em> + <em>A</em><sub><em>c</em></sub> + <em>s</em>...</span> hashét <span class="math inline"><em>A</em></span> összes sorára, és <span class="math inline"><em>B</em><sub><em>b</em></sub> + <em>s</em> + <em>B</em><sub><em>d</em></sub> + <em>s</em> + ...</span> hashét <span class="math inline"><em>B</em></span> összes sorára. Egy hashtábla segítségével gyorsan megtalálhatjuk a potenciálisan megegyező párokat (mivel ezeknek a hashe is meg fog egyezni).</p></li>
+<li><p>A feltételnek megegyező sorokat összefűzzük és a kimeneti táblába rakjuk.</p></li>
+</ol>
+<p>A kimenet sorainak sorrendjére nincs megkötés.</p>
+<h2 id="technikai-részletek">Technikai részletek</h2>
+<p>Elkészítendő egy <em>db_table</em> nevű osztály a következő metódusokkal (a lista elemei <strong>nem</strong> C++ függvény szignatúrák):</p>
+<ul>
+<li><p><strong>add_column(string name)</strong> - felvesz egy új, <em>name</em> nevű oszlopot. A már meglévő sorokban az új oszlophoz tartozó érték egy üres string. Ha már van <em>name</em> nevű oszlop, vagy <em>name</em> tartalmaz nem alfanumerikus karaktereket vagy <em>name</em> üres, akkor <em>invalid_name</em> kivételt dob.</p></li>
+<li><p><strong>column_names()</strong> - visszaadja a táblázat oszlopainak nevét egy std::vector-ban.</p></li>
+<li><p><strong>add_row()</strong> - felvesz egy új sort, csupa üres string értékekkel.</p></li>
+<li><p><strong>row_count()</strong> - visszaadja a táblában lévő sorok számát.</p></li>
+<li><p><strong>set(string col, size_t row, string value)</strong> - a <em>col</em> oszlop <em>row</em> sorának értékét <em>value</em>-ra állítja. <em>invalid_index</em> kivételt dob, ha nincs ilyen oszlop vagy sor. <em>invalid_value</em> kivételt dob, ha <em>value</em> tartalmaza ‘\0’-t.</p></li>
+<li><p><strong>get(string col, size_t row)</strong> - visszaadja a <em>col</em> oszlop <em>row</em> sorának értékét. <em>invalid_index</em> kivételt dob, ha nincs ilyen oszlop vagy sor.</p></li>
+<li><p><strong>join(db_table other, string cond)</strong> - joinolja a táblát <em>other</em>-rel a <em>cond</em> feltétel szerint és visszaadja az eredményt. A <em>cond</em> egyenlőségjellel elválasztott oszlopnév-párokat tartalmaz, vesszővel elválasztva. Pl.: “this1=other1,this2=other5”. A párok második tagjai hivatkoznak az <em>other</em> tábla oszlopneveire. <em>invalid_condition</em> kivételt dob, ha <em>cond</em> rosszul formázott, nem létező oszlopnévre hivatkozik, vagy a két tábla tartalmaz azonos nevű oszlopot.</p></li>
+</ul>
+<h2 id="követelmények">Követelmények</h2>
+<ul>
+<li>A join műveletet a fent leírt hashelős módszerrel kell megvalósítani.</li>
+<li>A megoldásnak le kell fordulnia a kiadott unit tesztekkel.</li>
+<li>Forduljon -Werror -Wall -Wextra -pedantic kapcsolókkal.</li>
+<li>Ne legyen memóriaszivárgás, segfault és hasonlók.</li>
+<li>A tesztek pontszámai csak tájékoztató jellegűek.</li>
+<li>A feladatot önállóan kell megoldani.</li>
+<li>A megoldáshoz fel lehet használni az órai kódokat és az STL-t is.</li>
+<li>A ~~~~~~~~~~ sor alá írni tilos.</li>
+</ul>
+</body>
+</html>
+

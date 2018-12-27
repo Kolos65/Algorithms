@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+<script>
+states = [-1, -1, -1];
+texts =
+[
+[
+"(2)(X)------------ X -------------- X --------- X\n" +
+"(1) X -- X ------- X -------- X --- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 5",
+
+"(2)[X]------------ X -------------- X --------- X\n" +
+"(1)(X)-- X ------- X -------- X --- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 5",
+
+"(2)[X]------------ X -------------- X --------- X\n" +
+"(1) X --(X)------- X -------- X --- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 5",
+
+"(2)[X]------------ X -------------- X --------- X\n" +
+"(1) X --[X]------- X -------- X --- X --------- X\n" +
+"(0) X --(X)-- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 5",
+
+"(2)[X]------------ X -------------- X --------- X\n" +
+"(1) X --[X]------- X -------- X --- X --------- X\n" +
+"(0) X -- X --(X)-- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 5",
+
+"(2)[X]------------ X -------------- X --------- X\n" +
+"(1) X --[X]------- X -------- X --- X --------- X\n" +
+"(0) X -- X --[X]-- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 5  e = [4, 1, min]"
+],
+[
+"(2)(X)------------ X -------------- X --------- X\n" +
+"(1) X -- X ------- X -------- X --- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 20",
+
+"(2) X ------------(X)-------------- X --------- X\n" +
+"(1) X -- X ------- X -------- X --- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 20",
+
+"(2) X ------------[X]-------------- X --------- X\n" +
+"(1) X -- X -------(X)-------- X --- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 20",
+
+"(2) X ------------[X]-------------- X --------- X\n" +
+"(1) X -- X ------- X --------(X)--- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 20",
+
+"(2) X ------------[X]-------------- X --------- X\n" +
+"(1) X -- X ------- X --------[X]--- X --------- X\n" +
+"(0) X -- X -- X -- X -- X ---(X)--- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 20",
+
+"(2) X ------------[X]-------------- X --------- X\n" +
+"(1) X -- X ------- X --------[X]--- X --------- X\n" +
+"(0) X -- X -- X -- X -- X ---[X]--- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = 20  e = [14, 14, 8]"
+],
+[
+"(2)(X)------------ X -------------- X --------- X\n" +
+"(1) X -- X ------- X -------- X --- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = -30",
+
+"(2)[X]------------ X -------------- X --------- X\n" +
+"(1)(X)-- X ------- X -------- X --- X --------- X\n" +
+"(0) X -- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = -30",
+
+"(2)[X]------------ X -------------- X --------- X\n" +
+"(1)[X]-- X ------- X -------- X --- X --------- X\n" +
+"(0)(X)-- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = -30",
+
+"(2)[X]------------ X -------------- X --------- X\n" +
+"(1)[X]-- X ------- X -------- X --- X --------- X\n" +
+"(0)[X]-- X -- X -- X -- X --- X --- X ---- X -- X\n" +
+"   min   1    4    8    12    14    20    30   max\n\nk = -30  e = [min, min, min]"
+]
+];
+
+function next(which) {
+    if (states[which] >= texts[which].length-1) {
+        return;
+    }
+    states[which] = states[which]+1;
+    document.getElementById("example" + which).innerHTML = texts[which][states[which]];
+}
+
+function prev(which) {
+    if (states[which] <= 0) {
+        return;
+    }
+    states[which] = states[which]-1;
+    document.getElementById("example" + which).innerHTML = texts[which][states[which]];
+}
+
+</script>
+
+</head>
+<body onload="next(0);next(1);next(2);">
+<h1 id="házi-feladat">1. házi feladat</h1>
+<p>Az első házi feladat egy skiplist készítése és azon a beszúrás, keresés és törlés műveletek implementálása.</p>
+<h2 id="skiplist">Skiplist</h2>
+<p>Adott egy rendezett láncolt lista, például:</p>
+<pre><code>1 -- 4 -- 8 -- 10 -- 12 -- 20 -- 30</code></pre>
+<p>A skiplist ennél annyival okosabb, hogy nem csak a szomszédos elemek vannak összekötve, hanem néha a távolabbiak is, akár több szinten:</p>
+<pre><code>(2) X ------------ X -------------- X --------- X
+(1) X -- X ------- X -- X --------- X --------- X
+(0) X -- X -- X -- X -- X --- X --- X ---- X -- X
+   min   1    4    8    10    12    20    30   max</code></pre>
+<p>Fontos, hogy &quot;lyukak&quot; nincsenek - ha egy elemnek van összeköttetése az n-edik szinten, akkor az n-1-ediken is kell, hogy legyen. A <em>min</em> és <em>max</em> speciális csomópontok, úgy vesszük, hogy értékük minden lehetséges értéknél kisebb ill. nagyobb.</p>
+<p>Ez lehetővé teszi a gyors keresést az elemek között. Például, ha arra vagyunk kíváncsiak, hogy a 12 szerepel-e a listában, akkor</p>
+<ul>
+<li>Indulunk min-ről a (2) szinten</li>
+<li>Következő elem: 8. Mivel 8 &lt; 12, továbblépünk 8-ra</li>
+<li>20 &gt;= 12, maradunk 8-on, de lemegyünk az (1) szintre</li>
+<li>10 &lt; 12, továbblépünk 10-re</li>
+<li>20 &gt;= 12, lemegyünk (0)-ra</li>
+<li>12 &gt;= 12, lejjebb nem tudunk menni, vége</li>
+<li>Az aktuális pozíciótól (10) jobbra lévő elem a 12!</li>
+</ul>
+<p>Természetesen előfordulhat, hogy nem létező elemet keresünk. Például, a 11-re pont a fenti lépéssorozatot kéne ugyanígy megcsinálnunk - de a végén nem a 11 mellett kötnénk ki, az ugyanis nincs is benne a halmazban.</p>
+<p>Ezen a kis példán természetesen nem látszik a skiplist átütő sebessége, de nem nehéz elképzelni, hogy nagy listák esetén, ahol egy-egy lépéssel akár több száz elemet is átugorhatunk, sokkal gyorsabb, mint a lineáris keresés.</p>
+<p>A törlés ugyanúgy működik, mint a láncolt listánál, kivéve, hogy esetleg több szintet is át kell láncolnunk. Például a fenti skiplist a 10 törlése után:</p>
+<pre><code>(2) X ------------ X -------------- X --------- X
+(1) X -- X ------- X -------------- X --------- X
+(0) X -- X -- X -- X -------- X --- X ---- X -- X
+   min   1    4    8          12    20    30   max</code></pre>
+<p>A beszúrás is ugyanúgy indul, mint a láncolt listában (14-et szúrtuk be):</p>
+<pre><code>(2) X ------------ X -------------- X --------- X
+(1) X -- X ------- X -------------- X --------- X
+(0) X -- X -- X -- X -- X --- X --- X ---- X -- X
+   min   1    4    8    12    14    20    30   max</code></pre>
+<p>Viszont néha szeretnénk az újonnan beszúrt elemet bekötni a magasabb szintekre is. Ezt véletlenszerűen fogjuk csinálni: a (0) szintre mindenképp bekötjük az elemet, majd 50% eséllyel továbblépünk az (1) szintre, újabb 50% eséllyel a (2)-re (tehát az n-edik szintig 0.5^n eséllyel fogunk eljutni). Tegyük fel, hogy ebben az esetben az (1) szintre még felléptünk, a (2)-re már nem.</p>
+<pre><code>(2) X ------------ X -------------- X --------- X
+(1) X -- X ------- X -------- X --- X --------- X
+(0) X -- X -- X -- X -- X --- X --- X ---- X -- X
+   min   1    4    8    12    14    20    30   max</code></pre>
+<p>Megintcsak, lyukak nem alakulhatnak ki - ha úgy döntünk, hogy az n-edik szintre nem kötjük be az elemet, az n+1-edik szintre sem köthetjük be.</p>
+<h2 id="követelmények">Követelmények</h2>
+<ul>
+<li>Az elkészített struktúra meg kell, hogy feleljen a fenti leírásnak.</li>
+<li>A skiplist legalább 10 &quot;emeletes&quot; kell, hogy legyen. Nem szükséges menet közben növelni vagy csökkenteni a szintek számát, rögzíthetjük a méretet rögtön az elején.</li>
+<li>A megoldásnak le kell fordulnia a kiadott unit tesztekkel. Ehhez kell:
+<ol style="list-style-type: decimal">
+<li>Egy skiplist nevű osztály, amelynek elemei intek. (Szabad templatesen dolgozni, ilyenkor válasszunk valamilyen más nevet az osztálynak, aztán typedefeljük be az intes változatot skiplistnek).</li>
+<li>Egy insert(x) függvény, ami beszúrja x-et a listába. Ha x már szerepel a listában, ne csináljon semmit.</li>
+<li>Egy erase(x) függvény, ami törli x-et a listából. Ha x nem szerepel a listában, ne csináljon semmit.</li>
+<li>Egy contains(x) függvény, ami megmondja, hogy x szerepel-e a listában.</li>
+<li>Egy size() függvény, ami megmondja a lista elemeinek számát.</li>
+</ol></li>
+<li>Forduljon -Werror -Wall -Wextra -pedantic kapcsolókkal.</li>
+<li>Ne legyen memóriaszivárgás, segfault és hasonlók.</li>
+<li>A tesztek pontszámai csak tájékoztató jellegűek.</li>
+<li>A feladatot önállóan kell megoldani.</li>
+<li>A megoldáshoz fel lehet használni az órai kódokat és az STL-t is.</li>
+<li>A ~~~~~~~~~~ sor alá írni tilos.</li>
+</ul>
+<h2 id="implementációs-javaslatok">Implementációs javaslatok</h2>
+<p>A következő javaslatokat megfogadni nem kötelező, de ajánlott.</p>
+<p>A lista minden csomópontjában tároljuk a csomóponthoz tartozó elemet, és egy tömböt a rákövetkező elemek pointereivel. A tömbök mérete természetesen csomópontonként változhat, attól függően, hogy hány szintre vannak bekötve.</p>
+<p>Készítsünk egy segédfüggvényt, ami tetszőleges értékhez visszaadja minden szinten az utolsó nála kisebb csomópontot. Vegyük az alábbi skiplistet:</p>
+<pre><code>(2) X ------------ X -------------- X --------- X
+(1) X -- X ------- X -------- X --- X --------- X
+(0) X -- X -- X -- X -- X --- X --- X ---- X -- X
+   min   1    4    8    12    14    20    30   max</code></pre>
+<p>A mágikus segédfüggvény ezen a listán a 14 bemenetre a [12, 8, 8] kimenetet adná, az 5-re pedig a [4, 1, min]-t. (Egész pontosan nem a csomópontok értékeit kell visszaadnia, hanem a csomópontokra mutató pointereket). Figyeljünk oda, hogy határozottan <em>kisebb</em> csomópontot kell visszaadni! Ez a függvény mindhárom megvalósítandó műveletnél (insert, contains, erase) hasznos lehet. Néhány fél-interaktív példa a működésére (k: keresett elem, e: eredmény):</p>
+<pre id="example0">
+</pre>
+<button onclick="prev(0);">&lt;</button>
+<button onclick="next(0);">&gt;</button>
+<pre id="example1">
+</pre>
+<button onclick="prev(1);">&lt;</button>
+<button onclick="next(1);">&gt;</button>
+<pre id="example2">
+</pre>
+<button onclick="prev(2);">&lt;</button>
+<button onclick="next(2);">&gt;</button>
+</body>
+</html>
+
