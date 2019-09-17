@@ -28,7 +28,7 @@ public:
     
     vector<int> operator[](int index);
     
-    Matrix operator*(Matrix rval) throw(class invalid_multiplication_operand);
+    Matrix operator*(Matrix rval) throw(invalid_multiplication_operand);
     Matrix operator+(Matrix rval) throw(invalid_addition_operand);
     
     void addRow(vector<int> row) throw(class invalid_row_length);
