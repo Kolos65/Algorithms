@@ -31,7 +31,7 @@ public:
     Matrix operator*(Matrix rval) throw(invalid_multiplication_operand);
     Matrix operator+(Matrix rval) throw(invalid_addition_operand);
     
-    void addRow(vector<int> row) throw(class invalid_row_length);
+    void addRow(vector<int> row) throw(invalid_row_length);
     void addColumn(vector<int> col) throw(invalid_column_length);
     
     void print();
